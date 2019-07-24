@@ -17,6 +17,7 @@
 
 package com.afollestad.materialdialogs.lifecycle
 
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.afollestad.materialdialogs.MaterialDialog
 
@@ -26,9 +27,10 @@ import com.afollestad.materialdialogs.MaterialDialog
  * window if it can.
  *
  * @param owner Optional lifecycle owner, if its null use windowContext.
+ * @param events array of lifecycle events allowing to dismiss the dialog
  */
-fun MaterialDialog.lifecycleOwner(owner: LifecycleOwner? = null): MaterialDialog {
-  val observer = DialogLifecycleObserver(::dismiss)
+fun MaterialDialog.lifecycleOwner(owner: LifecycleOwner? = null, events: Array<Lifecycle.Event> = arrayOf(Lifecycle.Event.ON_DESTROY, Lifecycle.Event.ON_PAUSE)): MaterialDialog {
+  val observer = DialogLifecycleObserver(::dismiss, events)
   val lifecycleOwner = owner ?: (windowContext as? LifecycleOwner
       ?: throw IllegalStateException(
           "$windowContext is not a LifecycleOwner."
